@@ -24,6 +24,17 @@ Show Sequence where
                        (show d) ++ 
                        (show mpd)
 
+public export
+extractUnSL : Sequence -> SeqLabel
+extractUnSL (Seq seqlabel _ _) = seqlabel
+
+public export
+extractUnSD : Sequence -> SeqData
+extractUnSD (Seq _ seqdata _) = seqdata
+
+public export
+extractUnQD : Sequence -> Maybe QualData
+extractUnQD (Seq _ _ qualdata) = qualdata
 
 public export
 ||| Convert a FASTA-formatted line into a sequence.
