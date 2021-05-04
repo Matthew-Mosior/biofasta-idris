@@ -1,0 +1,7 @@
+package biofasta
+
+modules = BioFasta.Sequence,
+          BioFasta.Common,
+          BioFasta.Helpers
+
+opts = "-p biocore"
