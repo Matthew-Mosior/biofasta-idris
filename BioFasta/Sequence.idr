@@ -25,16 +25,16 @@ Show Sequence where
                        (show mpd)
 
 public export
-extractUnSL : Sequence -> SeqLabel
-extractUnSL (Seq seqlabel _ _) = seqlabel
+extractSeqLabel : Sequence -> SeqLabel
+extractSeqLabel (Seq seqlabel _ _) = seqlabel
 
 public export
-extractUnSD : Sequence -> SeqData
-extractUnSD (Seq _ seqdata _) = seqdata
+extractSeqData : Sequence -> SeqData
+extractSeqData (Seq _ seqdata _) = seqdata
 
 public export
-extractUnQD : Sequence -> Maybe QualData
-extractUnQD (Seq _ _ qualdata) = qualdata
+extractQualData : Sequence -> Maybe QualData
+extractQualData (Seq _ _ qualdata) = qualdata
 
 public export
 ||| Convert a FASTA-formatted line into a sequence.
