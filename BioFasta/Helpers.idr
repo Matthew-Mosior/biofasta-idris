@@ -19,6 +19,16 @@ notLast : (l :(List (List Char))) -> {auto ok : NonEmpty l} -> List (List Char)
 notLast l = init l
 
 public export
+splitsAt : Offset -> List Char -> List Char -> List (List Char)
+splitsAt _ _ []       = []
+splitsAt n s (_::ss') = let (s1,s2) = splitAt (integerToNat 
+                                              (prim__cast_IntInteger 
+                                              (extractUnOff n))) s
+                          in if isNil s2
+                               then [s1]
+                               else s1 :: splitsAt n s2 ss'
+
+public export
 smallBlocks : List Char -> List (List Char)
 smallBlocks blist = groupBy (const (/= '>'))
                     (filter (\x => x /= '#')

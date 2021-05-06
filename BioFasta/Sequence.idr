@@ -36,7 +36,10 @@ public export
 extractQualData : Sequence -> Maybe QualData
 extractQualData (Seq _ _ qualdata) = qualdata
 
-public export
+
+--Read FASTA file.--
+
+export
 ||| Convert a FASTA-formatted line into a sequence.
 mkSeq : List (List Char) -> Sequence
 mkSeq []      = Seq (UnSL "") (UnSD "") Nothing
@@ -48,9 +51,9 @@ mkSeq (s::ss) = Seq (UnSL (pack (drop 1 s)))
                         isSeq s = if (not . isNil) s &&
                                      (all (isAlpha) s)
                                     then True
-                                    else False           
+                                    else False
 
-public export
+export
 ||| Convert a list of FASTA-formatted lines into a list of sequences.
 ||| Combines functionality of blocks and mkSeq.
 mkSeqs : List (List Char) -> List Sequence
@@ -64,9 +67,39 @@ readFasta f = do Right fasta <- readFile f | Left err => do putStrLn "Could not 
                                                             pure []
                  pure (mkSeqs (smallBlocks (unpack fasta)))
 
+--------------------
+
+
+--Write FASTA file.--
+
+export 
+wHead : File -> SeqLabel -> IO ()
+wHead f l = do Right addheadersign <- fPutStr f ">" | Left err => putStrLn "Could not add seqlabel header sign." *> printLn err
+               Right addseqlabel <- fPutStr f (extractUnSL l) | Left err => putStrLn "Could not add sequence label." *> printLn err
+               Right addnewline <- fPutStr f "\n" | Left err => putStrLn "Could not add newline following sequence label." *> printLn err
+               pure ()
+
+export
+wFasta : File -> Sequence -> IO ()
+wFasta f (Seq l d _) = do wHead f l
+                          let ls          = splitsAt 60 (unpack (extractUnSD d)) 
+                                                        (unpack (extractUnSD d))
+                          let mappedls    = intersperse ['\n'] ls
+                          let mappedlsstr = pack (concat mappedls)
+                          Right addseqdata <- fPutStr f mappedlsstr | Left err => putStrLn "Could not add sequence data following the sequence label." *> printLn err
+                          Right addnewline <- fPutStr f "\n" | Left err => putStrLn "Could not add newline following the sequence data." *> printLn err
+                          pure ()
+
+export
+prepareWriteFasta : File -> List Sequence -> IO ()
+prepareWriteFasta f = traverse_ (wFasta f)
+
 public export
 ||| Write sequences to a FASTA-formatted file.
 ||| Line length is 60.
 writeFasta : String -> List Sequence -> IO ()
-writeFasta f ss = do Right fastaaslist <- writeFile f (show ss) | Left err => putStrLn "Could not write FASTA file: " *> printLn err
-                     pure ()
+writeFasta f ss = do Right hfastaout <- openFile f WriteTruncate | Left err => putStrLn "Could not open FASTA output file: " *> printLn err
+                     prepareWriteFasta hfastaout ss
+                     closeFile hfastaout
+
+---------------------
