@@ -41,8 +41,3 @@ groupBy p' (x'::xs') =
                 True => (x :: ys, zs)
                 False => ([], (x :: ys) :: zs)
         go _ _ [] = ([], [])
---groupBy : (a -> a -> Bool) -> List a -> List (List a)
---groupBy _ [] = []
---groupBy p list@(x :: xs) =
---  let (ys, zs) = span (p x) xs in
---    (x :: ys) :: groupBy p (assert_smaller list zs)
