@@ -32,5 +32,4 @@ public export
 smallBlocks : List Char -> List (List Char)
 smallBlocks blist = groupBy (const (/= '>'))
                     (filter (\x => x /= '#')
-                    (dropWhile (\x => x /= '>')
-                    (filter (\x => x /= ' ') blist)))
+                    (dropWhile (\x => x /= '>') blist))
