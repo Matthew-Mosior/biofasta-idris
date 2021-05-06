@@ -1,7 +1,20 @@
 package biofasta
 
+authors    = "Matthew-Mosior"
+version    = "0.1.0.0"
+readme     = "README.md"
+
+homepage   = "https://github.com/Matthew-Mosior/idris2-biocore"
+sourceloc  = "https://github.com/Matthew-Mosior/idris2-biocore.git"
+bugtracker = "https://github.com/Matthew-Mosior/idris2-biocore/issues"
+
+license    = "BSD-3-Clause License"
+brief      = "Idris (Idris2) port of the Haskell biofasta library."
+
 modules = BioFasta.Sequence,
           BioFasta.Common,
           BioFasta.Helpers
 
-opts = "-p biocore"
+sourcedir = "src"
+
+opts = "-p biocore" 
