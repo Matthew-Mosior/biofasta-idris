@@ -6,6 +6,8 @@ import Data.Strings
 import BioCore.Sequence
 import BioFasta.Common
 
+%default total 
+
 
 public export
 ||| Convert SeqData to String.
@@ -13,11 +15,12 @@ toStr : SeqData -> String
 toStr (UnSD seqdata) = seqdata
 
 public export
-||| Split lines into blocks starting with '>' characters.
-||| Filter out # comments (but not semicolons?)
-blocks : List (List Char) -> List (List (List Char))
-blocks []    = []
-blocks blist = map (groupBy (const ('>' /=)))
-                   (map (filter ((/= '#')))
-                   (map (dropWhile (\x => x /= '>'))
-                   (filter (\x => not $ (isNil x)) blist)))
+notLast : (l :(List (List Char))) -> {auto ok : NonEmpty l} -> List (List Char)
+notLast l = init l
+
+public export
+smallBlocks : List Char -> List (List Char)
+smallBlocks blist = groupBy (const (/= '>'))
+                    (filter (\x => x /= '#')
+                    (dropWhile (\x => x /= '>')
+                    (filter (\x => x /= ' ') blist)))
