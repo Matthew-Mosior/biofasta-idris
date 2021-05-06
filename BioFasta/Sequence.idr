@@ -82,7 +82,7 @@ wHead f l = do Right addheadersign <- fPutStr f ">" | Left err => putStrLn "Coul
 export
 wFasta : File -> Sequence -> IO ()
 wFasta f (Seq l d _) = do wHead f l
-                          let ls          = splitsAt 60 (unpack (extractUnSD d)) 
+                          let ls          = splitsAt 59 (unpack (extractUnSD d)) 
                                                         (unpack (extractUnSD d))
                           let mappedls    = intersperse ['\n'] ls
                           let mappedlsstr = pack (concat mappedls)
