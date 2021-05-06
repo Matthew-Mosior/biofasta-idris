@@ -30,6 +30,14 @@ lines' s  = case break isNL s of
 public export
 groupBy : (a -> a -> Bool) -> List a -> List (List a)
 groupBy _ [] = []
-groupBy p list@(x :: xs) =
-  let (ys, zs) = span (p x) xs in
-    (x :: ys) :: groupBy p (assert_smaller list zs)
+groupBy p' (x'::xs') =
+    let (ys',zs') = go p' x' xs'
+    in (x' :: ys') :: zs'
+    where
+        go : (a -> a -> Bool) -> a -> List a -> (List a, List (List a))
+        go p z (x::xs) =
+            let (ys,zs) = go p x xs
+            in case p z x of
+                True => (x :: ys, zs)
+                False => ([], (x :: ys) :: zs)
+        go _ _ [] = ([], [])
